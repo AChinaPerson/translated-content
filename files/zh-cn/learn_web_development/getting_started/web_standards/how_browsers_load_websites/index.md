@@ -5,18 +5,18 @@ slug: Learn_web_development/Getting_started/Web_standards/How_browsers_load_webs
 
 {{PreviousMenuNext("Learn_web_development/Getting_started/Web_standards/The_web_standards_model", "Learn_web_development/Getting_started/Soft_skills", "Learn_web_development/Getting_started/Web_standards")}}
 
-在上一篇文章中，我们介绍了构建网站所用的[各类技术](/zh-CN/docs/Learn_web_development/Getting_started/Web_standards/)。本文将深入讲解这些技术是如何被浏览器渲染出来的——当浏览器收到构成网页的代码文件和其他资源后，它们如何被组合成用户最终看到并与之交互的完整页面？
+在上一篇文章中，我们介绍了构建网站所用的[各类技术](/zh-CN/docs/Learn_web_development/Getting_started/Web_standards/The_web_standards_model#现代_web_技术概述)。本文将深入讲解这些技术（在[万维网是如何工作的](/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works)这一篇中提及）是如何被浏览器渲染出来的——当浏览器收到构成网页的代码文件和其他资源后，它们如何被组合成用户最终看到并与之交互的完整页面？
 
 <table>
   <tbody>
     <tr>
-      <th scope="row">预备知识：</th>
+      <th scope="row">前提：</th>
       <td>
         对你使用的操作系统、网页浏览器及基本网络技术有初步了解。
       </td>
     </tr>
     <tr>
-      <th scope="row">学习目标：</th>
+      <th scope="row">学习成果：</th>
       <td>
         <ul>
           <li>了解 HTTP 响应中可能包含哪些类型的文件。</li>
@@ -40,13 +40,13 @@ slug: Learn_web_development/Getting_started/Web_standards/How_browsers_load_webs
 
 ## 网页渲染过程
 
-当用户访问一个新网页（比如点击链接或输入网址）时，浏览器会发出多个 HTTP 请求，并接收对应的响应文件。浏览器会处理这些文件，将它们组合成一个可交互的网页。这个过程称为**渲染**。
+当用户访问一个新网页（比如点击链接或输入网址）时，浏览器会发出多个 HTTP 请求，并接收到 HTTP 响应中的多个文件。浏览器会处理这些文件，将它们组合成一个可交互的网页。这个过程称为**渲染**。
 
 下面我们从高层次来理解浏览器渲染网页的基本步骤。注意，不同浏览器的实现细节可能有所不同，但核心流程大致相似。
 
-## 解析 HTML
+## 处理 HTML
 
-浏览器首先收到 HTML 文件，并将其解析成一棵**DOM 树**（文档对象模型）。DOM 以树状结构在内存中表示整个 HTML 文档的层次关系。例如下面这段简单的 HTML：
+浏览器首先收到 HTML 文件，并将其解析成一棵**DOM 树**（**文档对象模型**）。DOM 以树状结构在内存中表示整个 HTML 文档的层次关系。例如下面这段简单的 HTML：
 
 ```html
 <p>
@@ -57,7 +57,7 @@ slug: Learn_web_development/Getting_started/Web_standards/How_browsers_load_webs
 </p>
 ```
 
-每个标签、属性和文本都会成为 DOM 树中的一个**节点**。节点之间通过父子、兄弟关系相互关联。以上面的 HTML 为例，浏览器解析后会生成如下结构的 DOM 树：
+每个标签、属性和文本都会成为树结构中的一个 **DOM 节点**。节点之间通过父子、兄弟关系相互关联。节点通过其与其他 DOM 节点的关系来定义。某些元素是子节点的父节点，而子节点之间存在兄弟节点关系。以上面的 HTML 为例，浏览器将解析此 HTML 并据此创建以下 DOM 树：
 
 ```plain
 P
@@ -72,7 +72,7 @@ P
 
 此时如果直接渲染，效果如下：
 
-{{EmbedLiveSample('解析 HTML', '100%', 55)}}
+{{EmbedLiveSample('处理 HTML', '100%', 55)}}
 
 ```css hidden
 p {
@@ -84,15 +84,15 @@ p {
 
 - {{htmlelement("link")}} 引用的外部 [CSS](/zh-CN/docs/Learn_web_development/Core/Styling_basics) 样式表。
 - {{htmlelement("script")}} 引用的外部 [JavaScript](/zh-CN/docs/Learn_web_development/Core/Scripting) 文件。
-- {{htmlelement("img")}}、{{htmlelement("video")}}、{{htmlelement("audio")}} 等引用的媒体文件。
+- {{htmlelement("img")}}、{{htmlelement("video")}}、{{htmlelement("audio")}} 等用于引用希望嵌入网页的媒体文件的元素。
 
-## 解析 CSS 并绘制页面
+## 解析 CSS 并渲染页面
 
 获取 CSS 后，浏览器会按以下步骤处理：
 
-1. **解析与关联**：分析所有 CSS 规则，并根据选择器将它们映射到 DOM 树中对应的节点上，这一步形成**渲染树**。
-2. **布局**：根据 CSS 规则计算每个节点在屏幕上的位置与尺寸，也称为“重排”。
-3. **绘制**：将布局后的节点实际绘制到屏幕上，包括颜色、边框、背景等视觉细节。
+1. 解析所有 CSS（包括 HTML 自带以及外部引用的样式表），并根据应用的 HTML 元素将 CSS 的样式规则放入不同的“桶”（映射到 DOM 树中叫做**结点**），并（这一步形成**渲染树**）。
+2. 根据 CSS 规则计算每个节点在屏幕上的位置与尺寸，也称为“重排”。
+3. 将布局后的节点实际**绘制**到屏幕上。
 
 整个过程可参考以下示意图：
 
@@ -120,7 +120,7 @@ span {
 
 浏览器会将这个样式应用到每一个 `<span>` 节点，绘制出带边框和绿色背景的效果：
 
-{{EmbedLiveSample('解析 CSS 并绘制页面', '100%', 90)}}
+{{EmbedLiveSample('解析 CSS 并渲染页面', '100%', 90)}}
 
 ## 执行 JavaScript
 
